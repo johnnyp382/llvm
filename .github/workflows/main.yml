@@ -27,9 +27,9 @@ jobs:
       - name: ✅ -arch arm64
         run: clang -arch arm64 -dM -E - </dev/null
 
-      - name: ❌ -march=native --target=arm64-apple-ios16.0
+      - name: ❌ -march=native --target=arm64-apple-ios17.0
         if: ${{ success() || failure() }}
-        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -march=native --target=arm64-apple-ios16.0 -dM -E - </dev/null
+        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -march=native --target=arm64-apple-ios17.0 -dM -E - </dev/null
 
       - name: ❌ -march=native -arch arm64
         if: ${{ success() || failure() }}
