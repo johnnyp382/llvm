@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   build-macos:
-    runs-on: self-hosted
+    runs-on: MacBook-Pro
     strategy:
       fail-fast: false
       matrix:
