@@ -41,5 +41,5 @@ jobs:
       - name: Package
         env:
             GITHUB_USERNAME: ${{ github.actor }}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
         run: ./package_llvm.py --target-architecture ${{ matrix.target }} ${{ github.event.inputs.version }}
