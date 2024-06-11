@@ -1,6 +1,35 @@
-name: test
+name: Clang
+
 on:
   workflow_dispatch:
+    inputs:
+      rule:
+        description: "Rule to pass to make (e.g nano-package)"
+        required: true
+      target:
+        description: "Target to build for (e.g iphoneos-arm64)"
+        required: false
+        default: "iphoneos-arm64"
+      cfver:
+        description: "iOS version to build for (e.g 1800 for iOS 15)"
+        required: false
+        default: "2000"
+      source:
+        description: "Specific Procursus repository (e.g ProcursusTeam/Procursus)"
+        required: false
+        default: "ProcursusTeam/Procursus"
+      branch:
+        description: "Branch in source to checkout"
+        required: false
+        default: "main"
+      upload-base:
+        description: "Upload existant build_base"
+        required: false
+        default: "false"
+      upload-dist:
+        description: "Upload existant build_dist"
+        required: false
+        default: "true"
 
 defaults:
   run:
@@ -24,11 +53,53 @@ jobs:
         if: ${{ success() || failure() }}
         run: clang -mcpu=apple-a15 -arch arm64 -dM -E - </dev/null
 
-      - uses: actions/checkout@v4
-      - name: install requirements
-        run: pip3 install -r requirements.txt
       - name: Package
         env:
             GITHUB_USERNAME: ${{ github.actor }}
             GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
-        run: ./package_llvm.py --target-architecture ${{ matrix.target }} ${{ github.event.inputs.version }}
+
+  Run-Procursus:
+    name: Run ${{ github.event.inputs.rule }}
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: "${{ github.event.inputs.source }}"
+          ref: "${{ github.event.inputs.branch }}"
+
+      - name: Build
+        run: |
+          gmake ${{ github.event.inputs.rule }} \
+            MEMO_TARGET=${{ github.event.inputs.target }} \
+            MEMO_CFVER=${{ github.event.inputs.cfver }} \
+            BUILD_ROOT="${{ github.workspace }}" NO_PGP=1
+
+      - name: Check for build_{base,dist}
+        id: info
+        run: |
+          if [ -d "build_base" ]; then
+              echo "::set-output name=build-base-exists::true"
+          else
+              echo "::set-output name=build-base-exists::false"
+          fi
+
+          if [ -d "build_dist" ]; then
+              echo "::set-output name=build-dist-exists::true"
+          else
+              echo "::set-output name=build-dist-exists::false"
+          fi
+
+      - name: Upload build_base
+        if: steps.info.outputs.build-base-exists == 'true' && github.event.inputs.upload-base == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_base
+          path: build_base/
+
+      - name: Upload build_dist
+        if: steps.info.outputs.build-dist-exists == 'true' && github.event.inputs.upload-dist == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_dist
+          path: build_dist/
