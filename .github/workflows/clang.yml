@@ -47,7 +47,7 @@ jobs:
 
       - name: ❌ -mcpu=apple-a15 --target=arm64-apple-ios17.0
         if: ${{ success() || failure() }}
-        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -march=native --target=arm64-apple-ios17.0 -dM -E - </dev/null
+        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -mcpu=apple-a15 --target=arm64-apple-ios17.0 -dM -E - </dev/null
 
       - name: ❌ -mcpu=apple-a15 -arch arm64
         if: ${{ success() || failure() }}
