@@ -57,6 +57,7 @@ jobs:
         env:
             GITHUB_USERNAME: ${{ github.actor }}
             GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
+        run: ./package_llvm.py --target-architecture ${{ matrix.target }} ${{ github.event.inputs.version }}
 
   Run-Procursus:
     name: Run ${{ github.event.inputs.rule }}
