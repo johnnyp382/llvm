@@ -68,13 +68,6 @@ jobs:
           repository: "${{ github.event.inputs.source }}"
           ref: "${{ github.event.inputs.branch }}"
 
-      - name: Build
-        run: |
-          gmake ${{ github.event.inputs.rule }} \
-            MEMO_TARGET=${{ github.event.inputs.target }} \
-            MEMO_CFVER=${{ github.event.inputs.cfver }} \
-            BUILD_ROOT="${{ github.workspace }}" NO_PGP=1
-
       - name: Check for build_{base,dist}
         id: info
         run: |
