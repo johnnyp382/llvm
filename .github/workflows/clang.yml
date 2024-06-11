@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: ✅ -march=native
+      - name: ✅ -mcpu=apple-a15
         run: clang -mcpu=apple-a15 -dM -E - </dev/null
 
       - name: ✅ -arch arm64
@@ -18,9 +18,9 @@ jobs:
 
       - name: ❌ -mcpu=apple-a15 --target=arm64-apple-ios17.0
         if: ${{ success() || failure() }}
-        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -march=native --target=arm64-apple-ios16.0 -dM -E - </dev/null
+        run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -march=native --target=arm64-apple-ios17.0 -dM -E - </dev/null
 
-      - name: ❌ -march=native -arch arm64
+      - name: ❌ -mcpu=apple-a15 -arch arm64
         if: ${{ success() || failure() }}
         run: clang -march=native -arch arm64 -dM -E - </dev/null
 
