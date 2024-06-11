@@ -22,7 +22,7 @@ jobs:
 
       - name: ❌ -mcpu=apple-a15 -arch arm64
         if: ${{ success() || failure() }}
-        run: clang -march=native -arch arm64 -dM -E - </dev/null
+        run: clang -mcpu=apple-a15 -arch arm64 -dM -E - </dev/null
 
       - uses: actions/checkout@v4
       - name: install requirements
