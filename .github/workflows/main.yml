@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [ arm64 ]
+        target: [ arm64-apple-darwin ]
         
     steps:
       - name: ✅ -march=native
