@@ -53,6 +53,9 @@ jobs:
         if: ${{ success() || failure() }}
         run: clang -mcpu=apple-a15 -arch arm64 -dM -E - </dev/null
 
+      - uses: actions/checkout@v4
+      - name: install requirements
+        run: pip3 install -r requirements.txt
       - name: Package
         env:
             GITHUB_USERNAME: ${{ github.actor }}
