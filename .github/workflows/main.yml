@@ -36,4 +36,10 @@ jobs:
         env:
             GITHUB_USERNAME: ${{ github.actor }}
             GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
-        run: ./package_llvm.py --target-architecture ${{ matrix.target }} ${{ github.event.inputs.version }}
+        run: ./package_llvm.py --target-architecture=arm64-apple-darwin ${{ github.event.inputs.version }}
+
+      - name: Package
+        env:
+            GITHUB_USERNAME: ${{ github.actor }}
+            GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
+        run: ./upload_clang.py --target-architecture=arm64-apple-darwin ${{ github.event.inputs.version }}
