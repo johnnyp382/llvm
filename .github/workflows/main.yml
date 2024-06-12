@@ -36,10 +36,9 @@ jobs:
         env:
             GITHUB_USERNAME: ${{ github.actor }}
             GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
-        run: ./package_llvm.py --target-architecture arm64-apple-ios17.0
-
+        run: ./package_llvm.py --target-architecture arm64-apple-darwin 18.1.7
       - name: Package
         env:
             GITHUB_USERNAME: ${{ github.actor }}
             GITHUB_TOKEN: ${{ secrets.LLVM_ENV }}
-        run: ./upload_clang.py --target-architecture arm64-apple-ios17.0
+        run: ./upload_clang.py --target-architecture arm64-apple-darwin 18.1.7
